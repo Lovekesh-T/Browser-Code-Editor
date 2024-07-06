@@ -1,0 +1,5 @@
+dist
+.env
+service.yaml
+service.yml
+node_modules
