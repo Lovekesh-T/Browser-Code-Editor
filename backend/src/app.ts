@@ -17,7 +17,7 @@ app.use(express.urlencoded({extended:true}));
 
 
 app.use("/api/v1/user",userRouter)
-app.use("/api/v1/project",projectRouter)
+app.use("/api/v1/repl",projectRouter)
 
 app.use((error:any,req:Request,res:Response,next:NextFunction)=>{
 

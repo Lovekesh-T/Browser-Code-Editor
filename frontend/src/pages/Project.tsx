@@ -34,7 +34,7 @@ const Project = () => {
     setLoading(true);
     axios
       .post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/project/create`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/repl/create`,
         { replID, lang },
         {
           headers: {
@@ -111,10 +111,10 @@ const Project = () => {
 
       <main className="flex items-center justify-center flex-col gap-5 py-8 px-15 mt-20">
         <section className="bg-slate-800 rounded py-5 px-10 w-1/2 h-5/6 flex flex-col gap-5">
-          <h1 className="font-bold text-5xl text-center">Create Repl</h1>
+          <h1 className="font-bold text-5xl text-center mb-4">Create Repl</h1>
 
           <form className="max-w-sm mx-auto flex flex-col gap-4 items-center">
-            <div>
+            <div className="mb-1">
               <Space wrap>
                 <Select
                   defaultValue="nodejs"
