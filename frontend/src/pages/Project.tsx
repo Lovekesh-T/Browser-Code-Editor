@@ -1,5 +1,5 @@
-import { FormEvent, useState } from "react";
-import { HiOutlineUser } from "react-icons/hi";
+import {  FormEvent, useState } from "react";
+import { HiOutlinePlus, HiOutlineUser } from "react-icons/hi";
 import { useRecoilState } from "recoil";
 import ButtonLoading from "../components/ButtonLoading";
 import { userAtom } from "../store/user";
@@ -7,6 +7,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { v4 as generateUuid } from "uuid";
 import { useNavigate } from "react-router-dom";
+import { Select, Space } from "antd";
+import { Java, Nodejs, Python } from "../components/langIcons/LangIcons";
 
 const Project = () => {
   const [{ user }, setUser] = useRecoilState(userAtom);
@@ -113,21 +115,24 @@ const Project = () => {
 
           <form className="max-w-sm mx-auto flex flex-col gap-4 items-center">
             <div>
-              <label
-                htmlFor="countries"
-                className="text-center block mb-2 text-xl font-medium text-gray-900 dark:text-white"
-              >
-                Select an option
-              </label>
-              <select
-                defaultValue={"nodejs"}
-                onChange={(e) => setLang(e.target.value)}
-                id="countries"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option>Choose a Lang</option>
-                <option value="nodejs">Nodejs</option>
-              </select>
+              <Space wrap>
+                <Select
+                  defaultValue="nodejs"
+                  style={{
+                    width: 160,
+                    height: 40,
+                  }}
+                  onChange={(value) => {
+                    console.log(value);
+                    setLang(value);
+                  }}
+                  options={[
+                    { value: "nodejs", label: <span className="flex gap-3 items-center"><Nodejs/>Nodejs</span> },
+                    { value: "java", label: <span className="flex gap-3 items-center"><Java/>Java</span>},
+                    { value: "python", label: <span className="flex gap-3 items-center"><Python/>Python</span>},
+                  ]}
+                />
+              </Space>
             </div>
 
             {loading ? (
@@ -136,9 +141,9 @@ const Project = () => {
               <button
                 onClick={createRepl}
                 type="button"
-                className="text-white  text-center bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-lg text-sm px-5 py-2 me-2 mb-2 dark:bg-blue-800 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                className="text-white flex justify-center gap-2  items-center bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded text-sm px-5 py-2 mb-2 dark:bg-blue-800 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
-                Create Repl
+               <HiOutlinePlus className="text-base"/> CREATE
               </button>
             )}
           </form>

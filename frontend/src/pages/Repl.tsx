@@ -16,10 +16,10 @@ const Repl = () => {
     <div className="flex flex-col px-1 bg-[#161616] h-screen">
       <div className="flex h-[8vh] justify-end py-2 px-4">
         <button
-          className="outline-none ml-5 py-1 px-4 font-bold text-black transition rounded text-sm bg-slate-100 hover:bg-slate-200"
+          className="outline-none ml-5 px-4 uppercase font-semibold text-black transition rounded text-xm bg-slate-100 hover:bg-slate-200"
           onClick={() => setShowOuput((prev) => !prev)}
         >
-          See output
+         output
         </button>
       </div>
 
