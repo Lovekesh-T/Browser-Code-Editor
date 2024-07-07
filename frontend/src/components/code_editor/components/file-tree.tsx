@@ -390,7 +390,7 @@ const ContextMenu = ({
     <div
       className={`${
         contextMenu.open ? "pointer-events-auto" : ""
-      } w-9/12 bg-stone-900 absolute translate-x-10 translate-y-11 z-50 flex flex-col contextMenu`}
+      } w-9/12 bg-[#1a1a1a] absolute translate-x-10 translate-y-11 z-50 flex flex-col contextMenu`}
     >
       {type === Type.DIRECTORY ? (
         <>
@@ -415,7 +415,7 @@ const ContextMenu = ({
               setContextMenu({open:false,fileId:""})
             
             }}
-            className=" text-start text-sm px-2 py-1 transition rounded hover:bg-stone-800"
+            className=" text-start text-sm px-2 py-1 transition rounded hover:bg-[#2c2c2c]"
           >
             New File
           </button>
@@ -439,14 +439,14 @@ const ContextMenu = ({
               setFileType("dir");
               setContextMenu({open:false,fileId:""})
             }}
-            className=" text-start text-sm px-2 py-1 transition rounded hover:bg-stone-800"
+            className=" text-start text-sm px-2 py-1 transition rounded hover:bg-[#2c2c2c]"
           >
             New Folder
           </button>
         </>
       ) : null}
       <button
-        className=" text-start text-sm px-2 py-1 transition rounded hover:bg-stone-800"
+        className=" text-start text-sm px-2 py-1 transition rounded hover:bg-[#2c2c2c]"
         onClick={() => {
           setRename({ fileId: file.id, rename: true });
           setFileElement(element);
@@ -461,7 +461,7 @@ const ContextMenu = ({
             type: file.type === Type.DIRECTORY ? "dir" : "file",
           });
         }}
-        className=" text-start text-sm px-2 py-1 transition rounded hover:bg-stone-800"
+        className=" text-start text-sm px-2 py-1 transition rounded hover:bg-[#2c2c2c]"
       >
         Delete
       </button>

@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 
 export const Sidebar = ({children}: { children: ReactNode }) => {
   return (
-    <Aside>
+    <Aside className="shadow-md rounded bg-[#0e0e0e]">
       {children}
     </Aside>
   )

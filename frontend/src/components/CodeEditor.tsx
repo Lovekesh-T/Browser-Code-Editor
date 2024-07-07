@@ -159,7 +159,7 @@ const CodeEditor = ({ socket }: { socket: Socket | null }) => {
 
   const debouncer = (updateHandler: (data: string | undefined) => void) => {
     const waitTimer = 5000;
-    let timeout: number;
+    let timeout: NodeJS.Timeout ;
 
     return (data: string | undefined) => {
       clearTimeout(timeout);
@@ -171,8 +171,8 @@ const CodeEditor = ({ socket }: { socket: Socket | null }) => {
 
   return (
     <div>
-      <Main>
-        <Sidebar>
+      <Main className="gap-2 ">
+        <Sidebar >
           {!loaded ? (
             <FileTreeLoader />
           ) : (

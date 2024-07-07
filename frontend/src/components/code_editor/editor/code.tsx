@@ -16,9 +16,9 @@ export const Code = ({selectedFile,onChange}: { selectedFile: File | undefined ,
     language = "typescript"
 
   return (
-    <Div>
+    <Div >
       <Editor
-        height="92vh"
+        height="90vh"
         language={language}
         value={code}
         theme="vs-dark"
