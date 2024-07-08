@@ -1,5 +1,5 @@
-import {  FormEvent, useState } from "react";
-import { HiOutlinePlus, HiOutlineUser } from "react-icons/hi";
+import { FormEvent, useEffect, useState } from "react";
+import { HiOutlinePlus, HiOutlineTrash, HiOutlineUser } from "react-icons/hi";
 import { useRecoilState } from "recoil";
 import ButtonLoading from "../components/ButtonLoading";
 import { userAtom } from "../store/user";
@@ -9,13 +9,71 @@ import { v4 as generateUuid } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { Select, Space } from "antd";
 import { Java, Nodejs, Python } from "../components/langIcons/LangIcons";
+import Fork from "../components/icons/Fork";
+
+interface Repl {
+  _id: string;
+  replId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  lang: string;
+}
+
+const switchLangIcon = (lang:string):JSX.Element=>{
+  switch(lang){
+    case "nodejs":
+      return <Nodejs/>
+    case "java":
+      return <Java/>
+    case "python":
+      return <Python/>
+    default:
+      return <Nodejs/>;
+  }
+}
 
 const Project = () => {
   const [{ user }, setUser] = useRecoilState(userAtom);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [lang, setLang] = useState("nodejs");
   const [loading, setLoading] = useState(false);
+  const [repls, setRepls] = useState<Repl[]>([]);
   const navigate = useNavigate();
+
+  const fetchRepls = () => {
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/repl/all`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then(({ data }) => {
+        setRepls(data.data);
+      })
+      .catch((err) => {
+        console.log(`fetch repls error: ${err}`);
+      });
+  };
+  useEffect(() => {
+    fetchRepls();
+  }, []);
+
+  const handleDeleteRepl = async (replId: string) => {
+    try {
+      const { data } = await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/repl/delete/${replId}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      fetchRepls();
+      toast.success(data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -24,6 +82,25 @@ const Project = () => {
   const signout = () => {
     localStorage.removeItem("token");
     setUser({ loading: false, user: null });
+  };
+
+  const forkRepl = (completeId: string) => {
+    const username = completeId.split("-")[0];
+    const replId = completeId.split("-").slice(1).join("-");
+    console.log(username);
+    console.log(replId)
+    axios
+      .post(`${import.meta.env.VITE_ORCHESTRATER_URL}/start`, {
+        username,
+        replId,
+      })
+      .then(({ data }) => {
+        toast.success(data.message);
+        navigate(`/repl?replId=${username}-${replId}`);
+      })
+      .catch((err) => {
+        throw err;
+      });
   };
 
   const createRepl = async (e: FormEvent<HTMLButtonElement>) => {
@@ -109,17 +186,17 @@ const Project = () => {
         </nav>
       </header>
 
-      <main className="flex items-center justify-center flex-col gap-5 py-8 px-15 mt-20">
-        <section className="bg-slate-800 rounded py-5 px-10 w-1/2 h-5/6 flex flex-col gap-5">
-          <h1 className="font-bold text-5xl text-center mb-4">Create Repl</h1>
+      <main className="flex justify-center py-8 px-5 mt-20 max-h-[60vh]">
+        <section className=" pl-24 rounded py-5 px-8 w-1/2 h-5/6 flex flex-col gap-5 flex-[0.7]">
+          <h1 className="font-bold text-4xl  mb-4">Create New Repl</h1>
 
-          <form className="max-w-sm mx-auto flex flex-col gap-4 items-center">
+          <form className="max-w-sm items-start flex flex-col gap-4">
             <div className="mb-1">
               <Space wrap>
                 <Select
                   defaultValue="nodejs"
                   style={{
-                    width: 160,
+                    width: 200,
                     height: 40,
                   }}
                   onChange={(value) => {
@@ -127,9 +204,33 @@ const Project = () => {
                     setLang(value);
                   }}
                   options={[
-                    { value: "nodejs", label: <span className="flex gap-3 items-center"><Nodejs/>Nodejs</span> },
-                    { value: "java", label: <span className="flex gap-3 items-center"><Java/>Java</span>},
-                    { value: "python", label: <span className="flex gap-3 items-center"><Python/>Python</span>},
+                    {
+                      value: "nodejs",
+                      label: (
+                        <span className="flex gap-3 items-center">
+                          <Nodejs />
+                          Nodejs
+                        </span>
+                      ),
+                    },
+                    {
+                      value: "java",
+                      label: (
+                        <span className="flex gap-3 items-center">
+                          <Java />
+                          Java
+                        </span>
+                      ),
+                    },
+                    {
+                      value: "python",
+                      label: (
+                        <span className="flex gap-3 items-center">
+                          <Python />
+                          Python
+                        </span>
+                      ),
+                    },
                   ]}
                 />
               </Space>
@@ -143,11 +244,43 @@ const Project = () => {
                 type="button"
                 className="text-white flex justify-center gap-2  items-center bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded text-sm px-5 py-2 mb-2 dark:bg-blue-800 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
-               <HiOutlinePlus className="text-base"/> CREATE
+                <HiOutlinePlus className="text-base" /> CREATE
               </button>
             )}
           </form>
         </section>
+
+        <div className="w-[0.7px] m-h-full bg-slate-900"></div>
+
+        <article className="py-2 px-8 flex-1 max-h-full ">
+          <h2 className="text-xl font-semibold mb-4 ">Recent Repls</h2>
+          <div className="flex flex-col overflow-y-auto max-h-[85%]">
+            {repls.map((repl) => {
+              return (
+                <div className="transition py-2 px-4 flex rounded gap-8 items-center hover:bg-slate-800 cursor-pointer">
+                  {switchLangIcon(repl.lang)}
+                  <div className="ml-5">
+                    <p className="text-base">{repl.replId}</p>
+                    <span className="text-sm text-slate-400">
+                      {new Date(repl.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  <div className="ml-auto flex gap-4">
+                    <HiOutlineTrash
+                      className="text-lg text-red-500 hover:text-red-600"
+                      title="delete"
+                      onClick={() => {
+                        handleDeleteRepl(repl._id);
+                      }}
+                    />
+                    <Fork onClick={()=>forkRepl(repl.replId)} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </article>
       </main>
     </div>
   );

@@ -12,15 +12,14 @@ export const useSocket = (replId: string) => {
 
       socket.on("disconnect",async ()=>{
         console.log("disconnecting socket")
-        // try {
-        //  const {data} =  await axios.post("http://localhost:3002/delete",{username:replId.split("-")[0],replId:replId.split("-").slice(1).join("-")})
-        //   console.log(data.message)
-        // } catch (error) {
-        //    console.log(error)
-        // }
+        try {
+         const {data} =  await axios.post("http://localhost:3002/delete",{username:replId.split("-")[0],replId:replId.split("-").slice(1).join("-")})
+          console.log(data.message)
+        } catch (error) {
+           console.log(error)
+        }
       })
     })
-
     return () => {socket.disconnect()}
   }, [replId]);
 

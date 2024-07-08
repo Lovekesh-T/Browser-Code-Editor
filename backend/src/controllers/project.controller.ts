@@ -35,5 +35,7 @@ export const deleteRepl = asyncError(async (req,res,next)=>{
 export const getAllRepl = asyncError(async (req:any,res,next)=>{
    const repls = await Repl.find({user:req.user.id})
 
-   res.status(200).json(new ApiResponse("Successfully fetched all repls",200));
+   res.status(200).json(new ApiResponse("Successfully fetched all repls",200,repls));
 })
+
+
