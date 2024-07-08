@@ -257,7 +257,7 @@ const Project = () => {
           <div className="flex flex-col overflow-y-auto max-h-[85%]">
             {repls.map((repl) => {
               return (
-                <div className="transition py-2 px-4 flex rounded gap-8 items-center hover:bg-slate-800 cursor-pointer">
+                <div className="transition py-2 px-4 flex rounded gap-8 items-center hover:bg-slate-800 cursor-pointer" key={repl._id}>
                   {switchLangIcon(repl.lang)}
                   <div className="ml-5">
                     <p className="text-base">{repl.replId}</p>
