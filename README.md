@@ -10,7 +10,6 @@
 ## Project Setup
 
 ### 1. Clone the Repository
-Clone the repository to your local machine:
 ```bash
 git clone https://github.com/Lovekesh-T/Browser-Code-Editor.git
 cd <repository-directory>
